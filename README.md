@@ -15,7 +15,7 @@ CampusConnect aims to solve the problem of scattered event information for stude
 
 ---
 
-## ✨ Current Features (As of Part 7)
+## ✨ Current Features
 
 The project foundation is complete. The application currently supports:
 
