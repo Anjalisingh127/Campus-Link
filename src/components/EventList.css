@@ -1,0 +1,56 @@
+/* --- Add these new styles --- */
+.search-bar-container {
+  margin-bottom: 1.5rem;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-sizing: border-box; /* Important for padding to work nicely */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.no-events-message {
+  font-size: 1rem;
+  color: #555;
+  width: 100%;
+  text-align: center;
+  grid-column: 1 / -1; /* Makes it span all grid columns */
+}
+
+/* --- Your existing styles below --- */
+
+.event-list-container {
+  width: 100%;
+}
+
+.event-list-container h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+/* --- UPDATED --- */
+.event-list {
+  display: grid;
+  /* This creates a responsive grid:
+    - auto-fill: Create as many columns as will fit.
+    - minmax(3Ample, 1fr): Each column will be a minimum of 300px
+      and will share the remaining space (1fr) equally.
+  */
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem; /* Space between the cards */
+}
+
+/* --- REMOVED --- */
+/* All the old ".list-item-placeholder" styles have been deleted. */
+/* The styling is now handled by EventCard.jsx and EventCard.css. */

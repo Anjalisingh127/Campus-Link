@@ -1,0 +1,15 @@
+/* We set up a flex container on the #root 
+  (which we need to target from index.css)
+  to make the app full-height.
+*/
+
+.main-content {
+  /* This ensures our content has space */
+  padding: 2rem;
+  /* This centers the content container */
+  max-width: 1200px;
+  margin: 0 auto;
+  
+  /* This is key: it makes the content grow to fill available space */
+  flex-grow: 1; 
+}
