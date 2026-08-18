@@ -1,10 +1,10 @@
-# 🎓 CampusConnect
+# CampusConnect
 
 > A modern platform that aggregates events, hackathons, coding challenges, and internship opportunities specifically for college students.
 
 This project is being built from the ground up with React and Vite, with a focus on a clean user experience and, eventually, intelligent recommendations.
 
-## 🎯 The Problem
+## The Problem
 
 CampusConnect aims to solve the problem of scattered event information for students:
 
@@ -15,7 +15,7 @@ CampusConnect aims to solve the problem of scattered event information for stude
 
 ---
 
-## ✨ Current Features
+## Current Features
 
 The project foundation is complete. The application currently supports:
 
@@ -31,7 +31,7 @@ The project foundation is complete. The application currently supports:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Frontend:** React 18
 * **Bundler:** Vite
@@ -40,7 +40,7 @@ The project foundation is complete. The application currently supports:
 
 ---
 
-## 🚀 How to Run Locally
+## How to Run Locally
 
 1.  **Clone the repository:**
     ```bash
