@@ -1,64 +1,59 @@
 # CampusConnect
 
-> A modern platform that aggregates events, hackathons, coding challenges, and internship opportunities specifically for college students.
+CampusConnect is a full-stack campus event discovery and management platform. The project is being rebuilt as a modular MERN application with tested REST APIs, configuration history, auditability, and automated quality checks.
 
-This project is being built from the ground up with React and Vite, with a focus on a clean user experience and, eventually, intelligent recommendations.
+## Current milestone
 
-## The Problem
+The repository currently contains the project foundation:
 
-CampusConnect aims to solve the problem of scattered event information for students:
+- npm workspace-based monorepo
+- React and Vite client
+- Express server
+- environment validation
+- MongoDB connection lifecycle
+- API health endpoint
+- centralized 404 and error responses
+- initial API integration test
 
-* **Information Scattered:** Events are posted across dozens of platforms (Facebook, Discord, college emails, notice boards).
-* **Missed Opportunities:** Students frequently miss relevant events, hackathons, and deadlines due to low visibility.
-* **Time Wastage:** Students spend hours searching for suitable opportunities instead of applying.
-* **Lack of Personalization:** Generic listings don't match individual student interests, skills, or career goals.
+Features are documented as completed only after implementation and verification.
 
----
+## Prerequisites
 
-## Current Features
+- Node.js 22.12 or newer
+- npm 10 or newer
+- MongoDB Community Server or a MongoDB Atlas connection
 
-The project foundation is complete. The application currently supports:
+## Setup
 
-* **Multi-Page Navigation:** A fully functional single-page application (SPA) using `react-router-dom` to navigate between pages without reloading.
-* **Component-Based UI:** The app is built with reusable React components, including a `Header`, `Footer`, and a responsive `EventCard`.
-* **Dynamic Event Lists:** Separate, routed pages for:
-    * All Opportunities
-    * Hackathons
-    * Internships
-* **Live Search Filtering:** A real-time search bar on all pages that filters events by title, organization, or description.
-* **Responsive Design:** A modern CSS Grid layout that responsively arranges event cards to fit any screen size.
-* **Mock Data:** The app is currently powered by a `mockData.js` file, simulating a real data source for rapid UI development.
+```bash
+npm install
+copy client\.env.example client\.env
+copy server\.env.example server\.env
+npm run dev
+```
 
----
+The client runs at `http://localhost:5173` and the API at `http://localhost:5000`.
 
-## Tech Stack
+## Environment configuration
 
-* **Frontend:** React 18
-* **Bundler:** Vite
-* **Routing:** React Router DOM
-* **Styling:** Plain CSS3 (with CSS Grid & Flexbox)
+Runtime-specific settings are configured through `client/.env` and `server/.env`. The committed `.env.example` files document every supported variable, while actual `.env` files remain ignored by Git.
 
----
+Only public browser configuration may use the `VITE_` prefix. Database URLs, credentials, tokens, and other secrets must remain in `server/.env` and must never be placed in the client environment.
 
-## How to Run Locally
+## Quality checks
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/Anjalisingh127/Campus-Link.git](https://github.com/Anjalisingh127/Campus-Link.git)
-    ```
+```bash
+npm run check
+```
 
-2.  **Navigate to the project directory:**
-    ```bash
-    cd Campus-Link
-    ```
+## Planned modules
 
-3.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+- authentication and role-based authorization
+- event CRUD operations
+- search, filtering, sorting, and pagination
+- administrator-managed platform configuration
+- configuration version history and restoration
+- change audit logs and CSV reporting
+- automated tests and continuous integration
 
-4.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
-    The application will be available at `http://localhost:5173`.
+See [docs/architecture.md](docs/architecture.md) for the system structure.
