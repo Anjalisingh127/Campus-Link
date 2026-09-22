@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { env } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFound } from './middleware/notFound.js';
+import eventRoutes from './routes/eventRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 
 export const app = express();
@@ -19,5 +20,6 @@ if (env.nodeEnv !== 'test') {
 }
 
 app.use('/api/health', healthRoutes);
+app.use('/api/events', eventRoutes);
 app.use(notFound);
 app.use(errorHandler);
