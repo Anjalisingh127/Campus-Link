@@ -19,6 +19,7 @@ The repository currently contains the project foundation and Event API:
 - consistent API validation and database error responses
 - automated Event model and HTTP route tests
 - server-side search, compound filtering, sorting, and pagination
+- responsive React event discovery interface with loading, error, empty, and pagination states
 
 Features are documented as completed only after implementation and verification.
 
