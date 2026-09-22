@@ -12,7 +12,7 @@ Base URL: `http://localhost:5000/api`
 
 | Method | Endpoint | Success status | Description |
 | --- | --- | --- | --- |
-| `GET` | `/events` | `200` | Return all events ordered by date |
+| `GET` | `/events` | `200` | Search, filter, sort, and paginate events |
 | `GET` | `/events/:id` | `200` | Return one event |
 | `POST` | `/events` | `201` | Create an event |
 | `PUT` | `/events/:id` | `200` | Replace an event |
@@ -35,6 +35,26 @@ Base URL: `http://localhost:5000/api`
 ```
 
 Supported categories are `technical`, `cultural`, `sports`, `workshop`, `seminar`, and `other`. Supported statuses are `draft`, `published`, and `cancelled`.
+
+## Event discovery queries
+
+| Parameter | Accepted value | Default |
+| --- | --- | --- |
+| `search` | Up to 100 characters; searches title, description, organizer, and tags | Empty |
+| `category` | Any supported event category | All |
+| `status` | `draft`, `published`, or `cancelled` | All |
+| `from` | Valid ISO-compatible date | Unbounded |
+| `to` | Valid ISO-compatible date | Unbounded |
+| `sort` | `eventDate`, `createdAt`, or `title` | `eventDate` |
+| `order` | `asc` or `desc` | `asc` |
+| `page` | Positive integer | `1` |
+| `limit` | Integer from 1 to 50 | `10` |
+
+Example:
+
+```text
+GET /api/events?search=cloud&category=workshop&status=published&sort=eventDate&order=asc&page=1&limit=10
+```
 
 ## Error response
 

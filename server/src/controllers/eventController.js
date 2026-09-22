@@ -1,8 +1,8 @@
 import * as eventService from '../services/eventService.js';
 
 export async function listEvents(req, res) {
-  const events = await eventService.listEvents();
-  res.status(200).json({ data: events, meta: { count: events.length } });
+  const result = await eventService.listEvents(req.eventQuery);
+  res.status(200).json({ data: result.events, meta: result.pagination });
 }
 
 export async function getEvent(req, res) {

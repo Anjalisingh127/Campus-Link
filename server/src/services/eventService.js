@@ -1,8 +1,66 @@
 import { Event } from '../models/Event.js';
 import { AppError } from '../utils/AppError.js';
 
-export async function listEvents() {
-  return Event.find().sort({ eventDate: 1, createdAt: -1 });
+export function escapeRegularExpression(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function buildEventFilter({ search, category, status, from, to }) {
+  const filter = {};
+
+  if (search) {
+    const pattern = new RegExp(escapeRegularExpression(search), 'i');
+    filter.$or = [
+      { title: pattern },
+      { description: pattern },
+      { organizer: pattern },
+      { tags: pattern },
+    ];
+  }
+
+  if (category) {
+    filter.category = category;
+  }
+
+  if (status) {
+    filter.status = status;
+  }
+
+  if (from || to) {
+    filter.eventDate = {};
+
+    if (from) {
+      filter.eventDate.$gte = from;
+    }
+
+    if (to) {
+      filter.eventDate.$lte = to;
+    }
+  }
+
+  return filter;
+}
+
+export async function listEvents(query) {
+  const filter = buildEventFilter(query);
+  const direction = query.order === 'desc' ? -1 : 1;
+  const skip = (query.page - 1) * query.limit;
+  const sort = { [query.sort]: direction, _id: direction };
+
+  const [events, total] = await Promise.all([
+    Event.find(filter).sort(sort).skip(skip).limit(query.limit),
+    Event.countDocuments(filter),
+  ]);
+
+  return {
+    events,
+    pagination: {
+      page: query.page,
+      limit: query.limit,
+      total,
+      pages: total === 0 ? 0 : Math.ceil(total / query.limit),
+    },
+  };
 }
 
 export async function getEventById(id) {

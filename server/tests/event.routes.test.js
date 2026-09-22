@@ -30,12 +30,63 @@ describe('Event API', () => {
   beforeEach(() => vi.clearAllMocks());
 
   it('returns an event collection', async () => {
-    eventService.listEvents.mockResolvedValue([{ id: eventId, ...eventPayload }]);
+    eventService.listEvents.mockResolvedValue({
+      events: [{ id: eventId, ...eventPayload }],
+      pagination: { page: 1, limit: 10, total: 1, pages: 1 },
+    });
 
     const response = await request(app).get('/api/events');
 
     expect(response.status).toBe(200);
-    expect(response.body.meta.count).toBe(1);
+    expect(response.body.meta.total).toBe(1);
+  });
+
+  it('normalizes discovery query parameters', async () => {
+    eventService.listEvents.mockResolvedValue({
+      events: [],
+      pagination: { page: 2, limit: 5, total: 0, pages: 0 },
+    });
+
+    const response = await request(app).get(
+      '/api/events?search=cloud&category=WORKSHOP&status=PUBLISHED&page=2&limit=5&sort=title&order=desc',
+    );
+
+    expect(response.status).toBe(200);
+    expect(eventService.listEvents).toHaveBeenCalledWith(
+      expect.objectContaining({
+        search: 'cloud',
+        category: 'workshop',
+        status: 'published',
+        page: 2,
+        limit: 5,
+        sort: 'title',
+        order: 'desc',
+      }),
+    );
+  });
+
+  it('rejects an unsupported category filter', async () => {
+    const response = await request(app).get('/api/events?category=invalid');
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.code).toBe('INVALID_QUERY');
+  });
+
+  it('rejects an invalid date range', async () => {
+    const response = await request(app).get('/api/events?from=2026-12-01&to=2026-11-01');
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.details).toContainEqual({
+      field: 'from',
+      message: 'from cannot be later than to',
+    });
+  });
+
+  it('rejects invalid pagination', async () => {
+    const response = await request(app).get('/api/events?page=0&limit=100');
+
+    expect(response.status).toBe(400);
+    expect(response.body.error.details).toHaveLength(2);
   });
 
   it('returns one event by ID', async () => {

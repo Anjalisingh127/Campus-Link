@@ -18,6 +18,7 @@ The repository currently contains the project foundation and Event API:
 - event CRUD service, controller, and route layers
 - consistent API validation and database error responses
 - automated Event model and HTTP route tests
+- server-side search, compound filtering, sorting, and pagination
 
 Features are documented as completed only after implementation and verification.
 
@@ -53,7 +54,6 @@ npm run check
 ## Planned modules
 
 - authentication and role-based authorization
-- search, filtering, sorting, and pagination
 - administrator-managed platform configuration
 - configuration version history and restoration
 - change audit logs and CSV reporting
