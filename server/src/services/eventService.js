@@ -96,4 +96,6 @@ export async function deleteEvent(id) {
   if (!event) {
     throw new AppError(404, 'EVENT_NOT_FOUND', 'Event was not found');
   }
+
+  return event;
 }

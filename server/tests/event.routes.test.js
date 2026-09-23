@@ -20,10 +20,15 @@ vi.mock('../src/services/configurationService.js', () => ({
   getConfiguration: vi.fn(),
 }));
 
+vi.mock('../src/services/auditService.js', () => ({
+  recordEventAction: vi.fn(),
+}));
+
 const { env } = await import('../src/config/env.js');
 const eventService = await import('../src/services/eventService.js');
 const { User } = await import('../src/models/User.js');
 const configurationService = await import('../src/services/configurationService.js');
+const auditService = await import('../src/services/auditService.js');
 const { app } = await import('../src/app.js');
 
 const eventId = '68d000000000000000000001';
@@ -144,6 +149,10 @@ describe('Event API', () => {
 
     expect(response.status).toBe(201);
     expect(response.body.data.id).toBe(eventId);
+    expect(auditService.recordEventAction).toHaveBeenCalledWith(expect.objectContaining({
+      action: 'event.created',
+      actor: adminUser,
+    }));
   });
 
   it('rejects event creation without authentication', async () => {
@@ -199,10 +208,14 @@ describe('Event API', () => {
 
     expect(response.status).toBe(200);
     expect(response.body.data.venue).toBe('Main Auditorium');
+    expect(auditService.recordEventAction).toHaveBeenCalledWith(expect.objectContaining({
+      action: 'event.updated',
+      changes: expect.arrayContaining(['venue']),
+    }));
   });
 
   it('deletes an event', async () => {
-    eventService.deleteEvent.mockResolvedValue();
+    eventService.deleteEvent.mockResolvedValue({ id: eventId, ...eventPayload });
 
     const response = await request(app)
       .delete(`/api/events/${eventId}`)
@@ -210,5 +223,8 @@ describe('Event API', () => {
 
     expect(response.status).toBe(204);
     expect(response.body).toEqual({});
+    expect(auditService.recordEventAction).toHaveBeenCalledWith(expect.objectContaining({
+      action: 'event.deleted',
+    }));
   });
 });

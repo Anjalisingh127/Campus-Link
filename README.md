@@ -24,6 +24,8 @@ The repository currently contains:
 - event-submission enforcement driven by active configuration
 - administrator configuration dashboard with version restoration
 - downloadable CSV configuration audit report
+- immutable audit records for administrator event creation, updates, and deletion
+- filtered audit history, operational action totals, and downloadable CSV reporting
 - automated Event model, service, and HTTP route tests
 
 Features are documented as completed only after implementation and verification.
@@ -60,7 +62,6 @@ npm run check
 ## Planned modules
 
 - configuration version history and restoration
-- change audit logs and CSV reporting
 - automated tests and continuous integration
 
 See [docs/architecture.md](docs/architecture.md) for the system structure and [docs/api.md](docs/api.md) for the current API contract.

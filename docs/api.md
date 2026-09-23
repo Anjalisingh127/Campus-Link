@@ -24,6 +24,18 @@ Base URL: `http://localhost:5000/api`
 
 Every update and restore requires a `changeReason`. Archived versions record the resulting settings, action, administrator identity, and timestamp. Disabling `eventSubmissionEnabled` blocks event creation with `503 EVENT_SUBMISSIONS_DISABLED`.
 
+## Operational audit reporting
+
+All audit endpoints require an authenticated administrator.
+
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/audit` | Return paginated event-change history with optional action and date filters |
+| `GET` | `/audit/summary` | Return totals for created, updated, and deleted event actions |
+| `GET` | `/audit/export.csv` | Download the complete event audit trail as CSV |
+
+Event creation, update, and deletion automatically record the action, event identity, administrator snapshot, timestamp, and relevant metadata. Supported `action` filters are `event.created`, `event.updated`, and `event.deleted`. The `from` and `to` filters accept valid dates; `page` defaults to `1` and `limit` defaults to `20` with a maximum of `100`.
+
 ## Health
 
 | Method | Endpoint | Description |
