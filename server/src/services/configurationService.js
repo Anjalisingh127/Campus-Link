@@ -68,6 +68,12 @@ export async function listHistory({ page = 1, limit = 20 } = {}) {
   return { versions, pagination: { page, limit, total, pages: total === 0 ? 0 : Math.ceil(total / limit) } };
 }
 
+export function getHistoryForExport() {
+  return ConfigurationVersion.find({ configurationKey: CONFIGURATION_KEY })
+    .sort({ version: -1 })
+    .populate('changedBy', 'name email role');
+}
+
 export async function restoreConfiguration(sourceVersion, changeReason, userId) {
   const snapshot = await ConfigurationVersion.findOne({
     configurationKey: CONFIGURATION_KEY,

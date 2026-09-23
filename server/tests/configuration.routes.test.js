@@ -12,6 +12,7 @@ vi.mock('../src/services/configurationService.js', () => ({
   updateConfiguration: vi.fn(),
   listHistory: vi.fn(),
   restoreConfiguration: vi.fn(),
+  getHistoryForExport: vi.fn(),
 }));
 
 const { env } = await import('../src/config/env.js');
@@ -85,5 +86,22 @@ describe('Configuration API', () => {
       .send({ changeReason: 'Restore stable configuration' });
     expect(response.status).toBe(200);
     expect(configurationService.restoreConfiguration).toHaveBeenCalledWith(1, 'Restore stable configuration', userId);
+  });
+
+  it('exports configuration history as CSV', async () => {
+    configurationService.getHistoryForExport.mockResolvedValue([{
+      version: 2,
+      action: 'updated',
+      changeReason: 'Update platform defaults',
+      changedBy: { name: 'Admin', email: 'admin@example.com' },
+      createdAt: new Date('2026-09-23T10:00:00.000Z'),
+      settings,
+    }]);
+    const response = await request(app)
+      .get('/api/config/history.csv')
+      .set('Authorization', `Bearer ${adminToken}`);
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toContain('text/csv');
+    expect(response.text).toContain('Update platform defaults');
   });
 });

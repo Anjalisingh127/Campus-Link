@@ -19,6 +19,7 @@ Base URL: `http://localhost:5000/api`
 | `GET` | `/config` | Public | Return active platform configuration |
 | `PUT` | `/config` | Admin | Validate and publish a new configuration version |
 | `GET` | `/config/history` | Admin | Return paginated immutable version history |
+| `GET` | `/config/history.csv` | Admin | Download configuration history as a CSV audit report |
 | `POST` | `/config/restore/:version` | Admin | Restore a snapshot as a new version |
 
 Every update and restore requires a `changeReason`. Archived versions record the resulting settings, action, administrator identity, and timestamp. Disabling `eventSubmissionEnabled` blocks event creation with `503 EVENT_SUBMISSIONS_DISABLED`.

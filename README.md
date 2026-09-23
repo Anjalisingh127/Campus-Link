@@ -22,6 +22,8 @@ The repository currently contains:
 - administrator-managed platform configuration
 - immutable configuration version history and restoration
 - event-submission enforcement driven by active configuration
+- administrator configuration dashboard with version restoration
+- downloadable CSV configuration audit report
 - automated Event model, service, and HTTP route tests
 
 Features are documented as completed only after implementation and verification.
