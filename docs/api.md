@@ -2,6 +2,16 @@
 
 Base URL: `http://localhost:5000/api`
 
+## Authentication
+
+| Method | Endpoint | Success status | Description |
+| --- | --- | --- | --- |
+| `POST` | `/auth/register` | `201` | Create an attendee account and return a JWT |
+| `POST` | `/auth/login` | `200` | Authenticate an account and return a JWT |
+| `GET` | `/auth/me` | `200` | Return the authenticated user profile |
+
+`GET /auth/me` requires `Authorization: Bearer <token>`. Event discovery remains public; creating, updating, or deleting an event requires an authenticated user with the `admin` role.
+
 ## Health
 
 | Method | Endpoint | Description |

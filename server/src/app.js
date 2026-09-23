@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import { env } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFound } from './middleware/notFound.js';
+import authRoutes from './routes/authRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 
@@ -15,11 +16,10 @@ app.use(helmet());
 app.use(cors({ origin: env.clientOrigin }));
 app.use(express.json({ limit: env.jsonBodyLimit }));
 
-if (env.nodeEnv !== 'test') {
-  app.use(morgan(env.logFormat));
-}
+if (env.nodeEnv !== 'test') app.use(morgan(env.logFormat));
 
 app.use('/api/health', healthRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/events', eventRoutes);
 app.use(notFound);
 app.use(errorHandler);

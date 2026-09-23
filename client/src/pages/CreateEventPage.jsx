@@ -25,7 +25,7 @@ function validate(values) {
   return errors;
 }
 
-export function CreateEventPage() {
+export function CreateEventPage({ token }) {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [submitState, setSubmitState] = useState({ submitting: false, error: '' });
@@ -52,7 +52,7 @@ export function CreateEventPage() {
         registrationUrl: form.registrationUrl.trim(),
         tags: form.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
       };
-      const response = await createEvent(payload);
+      const response = await createEvent(payload, token);
       window.location.hash = `#/events/${response.data.id}`;
     } catch (error) {
       if (error.details?.length) {

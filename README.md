@@ -16,6 +16,9 @@ The repository currently contains:
 - responsive React discovery interface with loading, error, empty, and pagination states
 - client-side event creation and event-detail workflows
 - accessible form validation and API error feedback
+- JWT authentication with securely hashed passwords
+- attendee and administrator role-based authorization
+- protected event creation, update, and deletion endpoints
 - automated Event model, service, and HTTP route tests
 
 Features are documented as completed only after implementation and verification.
@@ -51,7 +54,6 @@ npm run check
 
 ## Planned modules
 
-- authentication and role-based authorization
 - administrator-managed platform configuration
 - configuration version history and restoration
 - change audit logs and CSV reporting

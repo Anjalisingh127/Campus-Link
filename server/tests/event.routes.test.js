@@ -1,4 +1,5 @@
 import request from 'supertest';
+import jwt from 'jsonwebtoken';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppError } from '../src/utils/AppError.js';
 
@@ -10,10 +11,23 @@ vi.mock('../src/services/eventService.js', () => ({
   deleteEvent: vi.fn(),
 }));
 
+vi.mock('../src/models/User.js', () => ({
+  User: { findById: vi.fn() },
+  USER_ROLES: ['attendee', 'admin'],
+}));
+
+const { env } = await import('../src/config/env.js');
 const eventService = await import('../src/services/eventService.js');
+const { User } = await import('../src/models/User.js');
 const { app } = await import('../src/app.js');
 
 const eventId = '68d000000000000000000001';
+const adminUser = { id: eventId, name: 'Admin', email: 'admin@example.com', role: 'admin' };
+const adminToken = jwt.sign(
+  { email: adminUser.email, role: adminUser.role },
+  env.jwtSecret,
+  { subject: eventId, expiresIn: '1h' },
+);
 const eventPayload = {
   title: 'Cloud Computing Workshop',
   description: 'A practical workshop covering cloud computing fundamentals.',
@@ -27,7 +41,10 @@ const eventPayload = {
 };
 
 describe('Event API', () => {
-  beforeEach(() => vi.clearAllMocks());
+  beforeEach(() => {
+    vi.clearAllMocks();
+    User.findById.mockResolvedValue(adminUser);
+  });
 
   it('returns an event collection', async () => {
     eventService.listEvents.mockResolvedValue({
@@ -117,14 +134,38 @@ describe('Event API', () => {
   it('creates a valid event', async () => {
     eventService.createEvent.mockResolvedValue({ id: eventId, ...eventPayload });
 
-    const response = await request(app).post('/api/events').send(eventPayload);
+    const response = await request(app).post('/api/events').set('Authorization', `Bearer ${adminToken}`).send(eventPayload);
 
     expect(response.status).toBe(201);
     expect(response.body.data.id).toBe(eventId);
   });
 
+  it('rejects event creation without authentication', async () => {
+    const response = await request(app).post('/api/events').send(eventPayload);
+    expect(response.status).toBe(401);
+    expect(response.body.error.code).toBe('AUTHENTICATION_REQUIRED');
+  });
+
+  it('rejects event creation for an attendee', async () => {
+    User.findById.mockResolvedValue({ ...adminUser, role: 'attendee' });
+    const attendeeToken = jwt.sign(
+      { email: adminUser.email, role: 'attendee' },
+      env.jwtSecret,
+      { subject: eventId, expiresIn: '1h' },
+    );
+    const response = await request(app)
+      .post('/api/events')
+      .set('Authorization', `Bearer ${attendeeToken}`)
+      .send(eventPayload);
+    expect(response.status).toBe(403);
+    expect(response.body.error.code).toBe('FORBIDDEN');
+  });
+
   it('rejects an invalid creation request', async () => {
-    const response = await request(app).post('/api/events').send({ ...eventPayload, title: '' });
+    const response = await request(app)
+      .post('/api/events')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ ...eventPayload, title: '' });
 
     expect(response.status).toBe(400);
     expect(response.body.error.code).toBe('VALIDATION_ERROR');
@@ -137,6 +178,7 @@ describe('Event API', () => {
 
     const response = await request(app)
       .put(`/api/events/${eventId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .send({ ...eventPayload, venue: 'Main Auditorium' });
 
     expect(response.status).toBe(200);
@@ -146,7 +188,9 @@ describe('Event API', () => {
   it('deletes an event', async () => {
     eventService.deleteEvent.mockResolvedValue();
 
-    const response = await request(app).delete(`/api/events/${eventId}`);
+    const response = await request(app)
+      .delete(`/api/events/${eventId}`)
+      .set('Authorization', `Bearer ${adminToken}`);
 
     expect(response.status).toBe(204);
     expect(response.body).toEqual({});

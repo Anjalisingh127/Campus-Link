@@ -43,10 +43,10 @@ export function getEvent(eventId, { signal } = {}) {
   return request(`/events/${eventId}`, { signal });
 }
 
-export function createEvent(event) {
+export function createEvent(event, token) {
   return request('/events', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify(event),
   });
 }
