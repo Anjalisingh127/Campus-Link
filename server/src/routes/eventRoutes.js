@@ -4,6 +4,7 @@ import { authenticate, authorize } from '../middleware/authenticate.js';
 import { validateEvent } from '../middleware/validateEvent.js';
 import { validateEventQuery } from '../middleware/validateEventQuery.js';
 import { validateObjectId } from '../middleware/validateObjectId.js';
+import { requireEventSubmissions } from '../middleware/requireEventSubmissions.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
 const router = Router();
@@ -12,7 +13,7 @@ const adminOnly = [asyncHandler(authenticate), authorize('admin')];
 router
   .route('/')
   .get(validateEventQuery, asyncHandler(eventController.listEvents))
-  .post(...adminOnly, validateEvent, asyncHandler(eventController.createEvent));
+  .post(...adminOnly, asyncHandler(requireEventSubmissions), validateEvent, asyncHandler(eventController.createEvent));
 
 router
   .route('/:id')

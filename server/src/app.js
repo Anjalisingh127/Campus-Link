@@ -6,6 +6,7 @@ import { env } from './config/env.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFound } from './middleware/notFound.js';
 import authRoutes from './routes/authRoutes.js';
+import configurationRoutes from './routes/configurationRoutes.js';
 import eventRoutes from './routes/eventRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
 
@@ -20,6 +21,7 @@ if (env.nodeEnv !== 'test') app.use(morgan(env.logFormat));
 
 app.use('/api/health', healthRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/config', configurationRoutes);
 app.use('/api/events', eventRoutes);
 app.use(notFound);
 app.use(errorHandler);

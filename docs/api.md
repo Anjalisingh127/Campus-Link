@@ -12,6 +12,17 @@ Base URL: `http://localhost:5000/api`
 
 `GET /auth/me` requires `Authorization: Bearer <token>`. Event discovery remains public; creating, updating, or deleting an event requires an authenticated user with the `admin` role.
 
+## Platform configuration
+
+| Method | Endpoint | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/config` | Public | Return active platform configuration |
+| `PUT` | `/config` | Admin | Validate and publish a new configuration version |
+| `GET` | `/config/history` | Admin | Return paginated immutable version history |
+| `POST` | `/config/restore/:version` | Admin | Restore a snapshot as a new version |
+
+Every update and restore requires a `changeReason`. Archived versions record the resulting settings, action, administrator identity, and timestamp. Disabling `eventSubmissionEnabled` blocks event creation with `503 EVENT_SUBMISSIONS_DISABLED`.
+
 ## Health
 
 | Method | Endpoint | Description |

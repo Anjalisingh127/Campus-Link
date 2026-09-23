@@ -19,6 +19,9 @@ The repository currently contains:
 - JWT authentication with securely hashed passwords
 - attendee and administrator role-based authorization
 - protected event creation, update, and deletion endpoints
+- administrator-managed platform configuration
+- immutable configuration version history and restoration
+- event-submission enforcement driven by active configuration
 - automated Event model, service, and HTTP route tests
 
 Features are documented as completed only after implementation and verification.
@@ -54,7 +57,6 @@ npm run check
 
 ## Planned modules
 
-- administrator-managed platform configuration
 - configuration version history and restoration
 - change audit logs and CSV reporting
 - automated tests and continuous integration

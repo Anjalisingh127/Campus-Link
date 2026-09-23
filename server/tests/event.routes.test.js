@@ -16,9 +16,14 @@ vi.mock('../src/models/User.js', () => ({
   USER_ROLES: ['attendee', 'admin'],
 }));
 
+vi.mock('../src/services/configurationService.js', () => ({
+  getConfiguration: vi.fn(),
+}));
+
 const { env } = await import('../src/config/env.js');
 const eventService = await import('../src/services/eventService.js');
 const { User } = await import('../src/models/User.js');
+const configurationService = await import('../src/services/configurationService.js');
 const { app } = await import('../src/app.js');
 
 const eventId = '68d000000000000000000001';
@@ -44,6 +49,7 @@ describe('Event API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     User.findById.mockResolvedValue(adminUser);
+    configurationService.getConfiguration.mockResolvedValue({ settings: { eventSubmissionEnabled: true } });
   });
 
   it('returns an event collection', async () => {
@@ -159,6 +165,16 @@ describe('Event API', () => {
       .send(eventPayload);
     expect(response.status).toBe(403);
     expect(response.body.error.code).toBe('FORBIDDEN');
+  });
+
+  it('rejects event creation when submissions are disabled', async () => {
+    configurationService.getConfiguration.mockResolvedValue({ settings: { eventSubmissionEnabled: false } });
+    const response = await request(app)
+      .post('/api/events')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send(eventPayload);
+    expect(response.status).toBe(503);
+    expect(response.body.error.code).toBe('EVENT_SUBMISSIONS_DISABLED');
   });
 
   it('rejects an invalid creation request', async () => {
