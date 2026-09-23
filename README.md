@@ -4,22 +4,19 @@ CampusConnect is a full-stack campus event discovery and management platform. Th
 
 ## Current milestone
 
-The repository currently contains the project foundation and Event API:
+The repository currently contains:
 
 - npm workspace-based monorepo
 - React and Vite client
-- Express server
-- environment validation
-- MongoDB connection lifecycle
-- API health endpoint
+- Express server and MongoDB connection lifecycle
+- environment validation and API health endpoint
 - centralized 404 and error responses
-- initial API integration test
-- validated Event data model
-- event CRUD service, controller, and route layers
-- consistent API validation and database error responses
-- automated Event model and HTTP route tests
+- validated Event model and CRUD API layers
 - server-side search, compound filtering, sorting, and pagination
-- responsive React event discovery interface with loading, error, empty, and pagination states
+- responsive React discovery interface with loading, error, empty, and pagination states
+- client-side event creation and event-detail workflows
+- accessible form validation and API error feedback
+- automated Event model, service, and HTTP route tests
 
 Features are documented as completed only after implementation and verification.
 
