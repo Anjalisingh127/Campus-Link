@@ -10,7 +10,7 @@ A full-stack campus event discovery and administration platform built with the M
 - Implemented searchable event discovery with compound filters, sorting, date ranges, and pagination.
 - Secured administrative workflows with JWT authentication, password hashing, and role-based authorization.
 - Added versioned platform configuration with change reasons, immutable history, and restoration.
-- Recorded event changes in an immutable operational audit trail with summary and CSV reporting.
+- Recorded event changes in an immutable operational audit trail with an administrator dashboard, filters, summary metrics, pagination, and CSV reporting.
 - Verified the application with **40 automated tests** across models, services, middleware, and HTTP routes.
 
 ## Why this project exists
@@ -41,16 +41,18 @@ The project also demonstrates production-oriented software-engineering practices
 
 ### Administrator experience
 
-- Create, update, and delete events through protected APIs
-- Access protected event-creation and configuration interfaces
+- Create, edit, and delete events through protected APIs and administrator interfaces
+- Reuse validated form workflows for event creation and editing
+- Access protected event-management, configuration, and audit interfaces
 - Publish validated platform configuration changes
 - Enable or disable event submissions
 - Control registration visibility and default page size
 - Supply a reason for every configuration change
 - Restore an earlier configuration as a new version
 - Download configuration history as CSV
-- Review filtered event-change audit data through the API
-- Download operational audit history as CSV
+- Review filtered event-change records through the operational audit dashboard
+- Monitor created, updated, deleted, and total action counts
+- Navigate paginated audit history and download operational audit data as CSV
 
 ### Reliability and security
 
@@ -297,8 +299,6 @@ API failures use a consistent structure:
 
 ## Roadmap
 
-- Administrator audit dashboard
-- Event edit and delete controls in the React client
 - GitHub Actions continuous integration
 - Production deployment and smoke testing
 - Final screenshots and live demonstration documentation
