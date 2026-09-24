@@ -10,6 +10,7 @@ export function SiteHeader({ user, onLogout }) {
       <nav className="header-nav" aria-label="Primary navigation">
         <a className="header-link" href="#/events">Explore events</a>
         {user?.role === 'admin' && <a className="header-link" href="#/admin/config">Configuration</a>}
+        {user?.role === 'admin' && <a className="header-link" href="#/admin/audit">Audit</a>}
         {user?.role === 'admin' && <a className="header-action" href="#/events/new">Create event</a>}
         {user ? <><span className="header-user">{user.name}</span><button className="header-logout" type="button" onClick={onLogout}>Sign out</button></> : <a className="header-action" href="#/login">Sign in</a>}
       </nav>

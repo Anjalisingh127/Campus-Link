@@ -50,3 +50,18 @@ export function createEvent(event, token) {
     body: JSON.stringify(event),
   });
 }
+
+export function updateEvent(eventId, event, token) {
+  return request(`/events/${eventId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify(event),
+  });
+}
+
+export function deleteEvent(eventId, token) {
+  return request(`/events/${eventId}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
