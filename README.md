@@ -1,162 +1,208 @@
 # CampusConnect
 
-A full-stack campus event discovery and administration platform built with the MERN stack. CampusConnect allows students to discover events while giving administrators secure tools to manage events, control platform behaviour, preserve configuration history, and export operational audit reports.
+A full-stack campus event discovery and administration platform built with the MERN stack.
 
-> **Project status:** Core application workflows are implemented and verified locally. Production deployment and CI automation are the remaining release milestones.
+CampusConnect gives students one place to discover campus events and gives administrators secure tools to manage event data, control platform settings, restore earlier configurations, and review operational activity.
+
+**Live application:** https://campus-connect-platform-sooty.vercel.app  
+**API health:** https://campus-connect-api-s7jk.onrender.com/api/health  
+**Repository:** https://github.com/Anjalisingh127/Campus-Link
+
+> **Status:** Deployed and production-verified. The React client runs on Vercel, the Express API runs on Render, and production data is stored in MongoDB Atlas.
+
+## What I built
+
+I built CampusConnect to solve a simple campus problem: useful workshops, seminars, technical sessions, and cultural events are often announced through different groups and channels. The application brings those opportunities into one searchable platform while keeping event administration controlled and traceable.
+
+The project goes beyond basic CRUD by including:
+
+- authenticated and role-protected administration;
+- searchable event discovery with filtering, sorting, date ranges, and pagination;
+- versioned platform configuration with reasons and restoration;
+- an operational audit trail with summary metrics and CSV export;
+- layered backend architecture and consistent API errors;
+- environment-based configuration and production deployment;
+- automated linting, API tests, production builds, and GitHub Actions CI.
 
 ## Project highlights
 
-- Built a modular React, Express, and MongoDB application in an npm workspace monorepo.
-- Implemented searchable event discovery with compound filters, sorting, date ranges, and pagination.
-- Secured administrative workflows with JWT authentication, password hashing, and role-based authorization.
-- Added versioned platform configuration with change reasons, immutable history, and restoration.
-- Recorded event changes in an immutable operational audit trail with an administrator dashboard, filters, summary metrics, pagination, and CSV reporting.
-- Verified the application with **40 automated tests** across models, services, middleware, and HTTP routes.
-
-## Why this project exists
-
-Campus opportunities are often distributed across multiple groups and communication channels. CampusConnect centralizes those events in one searchable application and provides controlled administrative workflows for maintaining reliable event data.
-
-The project also demonstrates production-oriented software-engineering practices beyond basic CRUD:
-
-- layered backend architecture;
-- validated environment configuration;
-- authorization at API boundaries;
-- consistent error contracts;
-- configuration versioning and recovery;
-- operational traceability;
-- automated quality checks.
+- Built a React, Express, and MongoDB application as an npm workspace monorepo.
+- Protected event, configuration, and audit workflows with JWT authentication and role-based authorization.
+- Implemented configuration version history so administrators can publish, review, export, and restore settings safely.
+- Recorded event creation, updates, and deletion in an audit trail linked to the responsible administrator.
+- Verified models, services, middleware, and HTTP routes with **40 automated tests**.
+- Deployed the complete application using Vercel, Render, and MongoDB Atlas.
 
 ## Features
 
-### Student experience
+### Event discovery
 
-- Browse and view campus events
+- Browse published campus events
 - Search titles, descriptions, organizers, and tags
-- Filter by category, publication status, and date range
-- Sort results and navigate paginated collections
-- Open registration links from event details
-- View responsive loading, empty, and error states
-- Register and sign in as an attendee
+- Filter by category, status, and date range
+- Sort by event date or title
+- Navigate paginated results
+- View complete event details and registration links
+- Handle loading, empty, validation, and error states
 
-### Administrator experience
+### Authentication and authorization
 
-- Create, edit, and delete events through protected APIs and administrator interfaces
-- Reuse validated form workflows for event creation and editing
-- Access protected event-management, configuration, and audit interfaces
-- Publish validated platform configuration changes
+- Register and sign in through the React interface
+- Hash passwords with bcryptjs
+- Issue signed JSON Web Tokens
+- Protect private API routes
+- Separate attendee and administrator permissions
+- Restore the authenticated session through the profile endpoint
+
+### Administrator operations
+
+- Create, edit, and delete events
+- Use a shared validated event form
+- Publish platform configuration changes with a required reason
 - Enable or disable event submissions
-- Control registration visibility and default page size
-- Supply a reason for every configuration change
+- Control registration visibility and the default page size
+- Review immutable configuration history
 - Restore an earlier configuration as a new version
-- Download configuration history as CSV
-- Review filtered event-change records through the operational audit dashboard
-- Monitor created, updated, deleted, and total action counts
-- Navigate paginated audit history and download operational audit data as CSV
+- Export configuration history to CSV
 
-### Reliability and security
+### Operational audit
 
-- Password hashing with bcrypt
-- Signed JWT authentication
-- Attendee and administrator roles
-- Route-level authorization
-- Helmet security headers and configurable CORS
-- Centralized error handling
-- Request and query validation
-- Environment-based secrets
-- Database-aware health endpoint
-- Immutable configuration and audit records
-
-## Architecture
-
-```mermaid
-flowchart TD
-    UI["React + Vite client"]
-    API["Express REST API"]
-    MW["Authentication, authorization and validation"]
-    DOMAIN["Controllers and services"]
-    DB[("MongoDB via Mongoose")]
-
-    UI -->|HTTP / JSON| API
-    API --> MW
-    MW --> DOMAIN
-    DOMAIN --> DB
-    DB --> DOMAIN
-    DOMAIN -->|Consistent response| UI
-```
-
-The server follows a layered request flow:
-
-1. Routes define endpoints and middleware.
-2. Middleware authenticates users and validates input.
-3. Controllers translate HTTP requests into domain operations.
-4. Services implement business rules and database interactions.
-5. Mongoose models enforce persistent data constraints.
-6. Centralized middleware returns consistent errors.
-
-Detailed design notes are available in [docs/architecture.md](docs/architecture.md), and the complete endpoint contract is documented in [docs/api.md](docs/api.md).
+- Record event create, update, and delete actions
+- Attribute each action to the authenticated administrator
+- Filter records by action and date
+- Review created, updated, deleted, and total counts
+- Navigate paginated audit history
+- Export audit evidence to CSV
 
 ## Technology stack
 
-| Layer | Technologies |
+| Area | Technologies |
 | --- | --- |
 | Frontend | React 19, Vite 7, JavaScript, CSS |
 | Backend | Node.js, Express 5, REST APIs |
-| Database | MongoDB, Mongoose |
+| Database | MongoDB Atlas, Mongoose |
 | Authentication | JSON Web Tokens, bcryptjs |
-| Security and logging | Helmet, CORS, Morgan |
+| Security | Helmet, CORS, request validation |
+| Logging | Morgan |
 | Testing | Vitest, Supertest |
-| Code quality | ESLint |
+| Code quality | ESLint, npm audit |
+| CI/CD | GitHub Actions, Vercel, Render |
 | Project structure | npm workspaces, Git, GitHub |
+
+## Architecture
+
+~~~mermaid
+flowchart TD
+    U[Student or administrator] --> C[React client on Vercel]
+    C -->|HTTPS REST requests| A[Express API on Render]
+    A --> M[Authentication and validation middleware]
+    M --> R[Controllers and routes]
+    R --> S[Service layer]
+    S --> D[(MongoDB Atlas)]
+    A --> L[Central error handling and audit logging]
+~~~
+
+The backend follows a layered request flow:
+
+1. **Routes** map HTTP endpoints and attach middleware.
+2. **Middleware** authenticates users, checks roles, and validates inputs.
+3. **Controllers** translate requests into application operations.
+4. **Services** contain business rules and database interactions.
+5. **Mongoose models** define persistent data and constraints.
+6. **Error middleware** returns a consistent response contract.
+7. **Audit services** preserve administrator activity for reporting.
+
+More detail is available in [docs/architecture.md](docs/architecture.md), and the API contract is documented in [docs/api.md](docs/api.md).
+
+## Production design
+
+~~~mermaid
+flowchart LR
+    B[Browser] --> V[Vercel]
+    V --> R[Render API]
+    R --> A[(MongoDB Atlas)]
+    G[GitHub main branch] --> CI[GitHub Actions]
+    CI --> V
+    CI --> R
+~~~
+
+| Component | Deployment |
+| --- | --- |
+| React client | Vercel |
+| Express API | Render |
+| Production database | MongoDB Atlas |
+| Continuous integration | GitHub Actions |
+| Secret management | Vercel and Render environment variables |
+
+The frontend only contains public Vite configuration. Database credentials, JWT secrets, and administrator bootstrap credentials are never committed to the repository.
 
 ## Repository structure
 
-```text
+~~~text
 Campus-Link/
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── client/
-│   └── src/
-│       ├── api/             # Browser API clients
-│       ├── components/      # Reusable interface components
-│       ├── config/          # Client environment access
-│       └── pages/           # Discovery, authentication and admin pages
+│   ├── src/
+│   │   ├── api/          # Browser API clients
+│   │   ├── components/   # Reusable interface components
+│   │   ├── config/       # Client environment access
+│   │   └── pages/        # Discovery, authentication and admin pages
+│   └── .env.example
 ├── server/
 │   ├── src/
-│   │   ├── config/          # Environment and database configuration
-│   │   ├── controllers/     # HTTP request handlers
-│   │   ├── middleware/      # Validation, security and error handling
-│   │   ├── models/          # Mongoose schemas
-│   │   ├── routes/          # REST route definitions
-│   │   ├── scripts/         # Administrator seeding
-│   │   ├── services/        # Business and persistence logic
-│   │   └── utils/           # Shared server utilities
-│   └── tests/               # Model, service and route tests
+│   │   ├── config/       # Environment and database configuration
+│   │   ├── controllers/  # HTTP request handlers
+│   │   ├── middleware/   # Authentication, validation and errors
+│   │   ├── models/       # Mongoose schemas
+│   │   ├── routes/       # REST route definitions
+│   │   ├── scripts/      # Administrator seeding
+│   │   ├── services/     # Business and persistence logic
+│   │   └── utils/        # Shared server utilities
+│   ├── tests/
+│   └── .env.example
 ├── docs/
 │   ├── api.md
 │   └── architecture.md
-└── package.json             # Workspace scripts
-```
+├── package.json
+└── package-lock.json
+~~~
+
+## Data model
+
+| Model | Purpose |
+| --- | --- |
+| Event | Stores event content, publishing status, tags, venue, date, and registration details |
+| User | Stores identity, hashed password, and application role |
+| PlatformConfiguration | Stores the active platform settings |
+| ConfigurationVersion | Preserves immutable configuration snapshots and change reasons |
+| AuditLog | Records administrative event changes and reporting metadata |
 
 ## API overview
 
-Base URL during local development: `http://localhost:5000/api`
+Local base URL: http://localhost:5000/api  
+Production base URL: https://campus-connect-api-s7jk.onrender.com/api
 
 | Area | Endpoints | Access |
 | --- | --- | --- |
-| Health | `GET /health` | Public |
-| Authentication | `POST /auth/register`, `POST /auth/login`, `GET /auth/me` | Mixed |
-| Events | `GET /events`, `GET /events/:id` | Public |
-| Event management | `POST /events`, `PUT /events/:id`, `DELETE /events/:id` | Admin |
-| Configuration | `GET /config` | Public |
-| Configuration management | `PUT /config`, history, restore, CSV export | Admin |
-| Operational audit | history, summary, CSV export under `/audit` | Admin |
+| Health | GET /health | Public |
+| Authentication | POST /auth/register, POST /auth/login, GET /auth/me | Mixed |
+| Event discovery | GET /events, GET /events/:id | Public |
+| Event management | POST /events, PUT /events/:id, DELETE /events/:id | Administrator |
+| Configuration | GET /config | Public |
+| Configuration management | update, history, restore, and CSV routes under /config | Administrator |
+| Operational audit | history, summary, and CSV routes under /audit | Administrator |
 
-Example discovery request:
+Example event-discovery request:
 
-```http
+~~~http
 GET /api/events?search=cloud&category=workshop&status=published&sort=eventDate&order=asc&page=1&limit=10
-```
+~~~
 
-## Local setup
+See [docs/api.md](docs/api.md) for request bodies, query parameters, response shapes, and error contracts.
+
+## Local development
 
 ### Prerequisites
 
@@ -166,151 +212,153 @@ GET /api/events?search=cloud&category=workshop&status=published&sort=eventDate&o
 
 ### 1. Clone and install
 
-```bash
+~~~bash
 git clone https://github.com/Anjalisingh127/Campus-Link.git
 cd Campus-Link
 npm install
-```
+~~~
 
 ### 2. Create environment files
 
-PowerShell:
-
-```powershell
+~~~powershell
 Copy-Item client\.env.example client\.env
 Copy-Item server\.env.example server\.env
-```
+~~~
 
-Bash:
+On macOS or Linux:
 
-```bash
+~~~bash
 cp client/.env.example client/.env
 cp server/.env.example server/.env
-```
+~~~
 
-Update the local files with your database connection, client origin, and a long random JWT secret. Actual `.env` files are ignored by Git.
+Client variables:
 
-Important environment variables:
+~~~env
+VITE_APP_NAME=CampusConnect
+VITE_API_BASE_URL=http://localhost:5000/api
+~~~
 
-| File | Variable | Purpose |
-| --- | --- | --- |
-| `client/.env` | `VITE_API_BASE_URL` | API base path or deployed API URL |
-| `server/.env` | `MONGODB_URI` | MongoDB connection string |
-| `server/.env` | `CLIENT_ORIGIN` | Allowed browser origin |
-| `server/.env` | `JWT_SECRET` | JWT signing secret |
-| `server/.env` | `JWT_EXPIRES_IN` | Token lifetime |
-| `server/.env` | `ADMIN_EMAIL` | Administrator seeding email |
-| `server/.env` | `ADMIN_PASSWORD` | Temporary administrator seeding password |
+Server variables:
 
-Never place database credentials or JWT secrets in the client environment.
+~~~env
+NODE_ENV=development
+PORT=5000
+MONGODB_URI=mongodb://127.0.0.1:27017/campus_connect
+CLIENT_ORIGIN=http://localhost:5173
+JWT_SECRET=replace-with-a-random-secret-of-at-least-32-characters
+JWT_EXPIRES_IN=2h
+ADMIN_EMAIL=admin@example.com
+~~~
+
+Use private values only in local or hosting-provider environment settings. Never commit real credentials.
 
 ### 3. Seed an administrator
 
-Set an administrator email and a password of at least 12 characters in `server/.env`, then run:
+Supply ADMIN_PASSWORD temporarily in your terminal environment, run the seed command, and then remove it from the environment.
 
-```bash
+~~~bash
 npm run seed:admin --workspace server
-```
+~~~
 
-After the account is created, remove `ADMIN_PASSWORD` from `server/.env`. The stored database value is a bcrypt hash, not the plaintext password.
+The seed is idempotent: it creates the administrator when missing and updates the existing account when it already exists.
 
-### 4. Run the application
+### 4. Start the application
 
-```bash
+~~~bash
 npm run dev
-```
+~~~
 
-- Client: [http://localhost:5173](http://localhost:5173)
-- API: [http://localhost:5000](http://localhost:5000)
-- Health check: [http://localhost:5000/api/health](http://localhost:5000/api/health)
+- Client: http://localhost:5173
+- API: http://localhost:5000
+- Health check: http://localhost:5000/api/health
 
-## Quality checks
+## Available commands
 
-Run the complete local verification pipeline:
+| Command | Purpose |
+| --- | --- |
+| npm run dev | Start the client and server together |
+| npm run build | Build the production client |
+| npm run lint | Lint all workspaces |
+| npm run test | Run automated server tests |
+| npm run check | Run lint, tests, and production build |
+| npm run seed:admin --workspace server | Create or update the administrator |
 
-```bash
+## Testing and continuous integration
+
+The server test suite contains **40 tests** across seven files. It covers:
+
+- health and unknown-route responses;
+- event model validation;
+- event service queries;
+- search, filtering, sorting, date ranges, and pagination;
+- authentication and authorization;
+- protected event creation, update, and deletion;
+- configuration publishing, history, restoration, and export;
+- operational audit history, summaries, and CSV export.
+
+Run the same quality gate used by CI:
+
+~~~bash
 npm run check
-```
+~~~
 
-This command executes:
+The GitHub Actions workflow runs on pushes and pull requests to main. It installs locked dependencies with npm ci and requires linting, tests, and the Vite production build to pass.
 
-1. ESLint across both workspaces
-2. Vitest and Supertest test suites
-3. Vite production build
+## Production verification
 
-Current verified result:
+The deployed application was verified end to end with the following checks:
 
-```text
-Test files: 7 passed
-Tests:      40 passed
-Build:      successful
-```
+- API health returned service status ok and database status connected.
+- The React client loaded event data through the production Render API.
+- Administrator login and the authenticated profile endpoint succeeded.
+- A temporary production event was created, updated, and deleted.
+- The audit dashboard recorded all three actions against one resource ID.
+- The operational audit report exported three structured CSV records.
+- Production configuration version 1 was published with submissions enabled.
+- MongoDB Atlas persisted production data.
+- GitHub Actions completed the quality workflow successfully.
 
-## Configuration recovery workflow
+## Security decisions
 
-Configuration changes are not overwritten in place. Each update creates an immutable version containing:
+- Real environment files are excluded from Git.
+- Passwords are hashed before storage.
+- JWT secrets and database credentials are supplied through environment variables.
+- Protected routes require a valid Bearer token.
+- Administrator routes check the authenticated role.
+- Helmet sets common security headers.
+- CORS accepts the configured frontend origin.
+- Request bodies, object IDs, and query parameters are validated.
+- Centralized middleware avoids leaking internal error details.
 
-- the validated settings snapshot;
-- the administrator identity;
-- the change reason;
-- the action and timestamp;
-- the source version when restored.
+## Operational notes
 
-Restoring a version creates another new version, preserving the complete history.
+- The Render free service may sleep during inactivity, so the first request can take about 50 seconds or longer.
+- The public application intentionally does not expose administrator credentials.
+- Production configuration should keep event submissions enabled unless maintenance requires a temporary pause.
+- Configuration restoration creates a new version instead of overwriting history.
+- Audit and configuration CSV exports provide portable operational evidence.
 
-## Operational audit workflow
+## Current limitations and future improvements
 
-Successful administrator event mutations create audit records for:
+This is a portfolio project, and there are still useful improvements I would make in a larger production release:
 
-- `event.created`
-- `event.updated`
-- `event.deleted`
+- add automated browser tests for critical React workflows;
+- add refresh-token rotation and account recovery;
+- store registration records inside the platform instead of linking externally;
+- add image uploads and event ownership;
+- improve audit update metadata so it reports only fields whose values changed;
+- add monitoring, rate limiting, and structured production logs;
+- add a custom domain and accessibility testing.
 
-Each record preserves the event identity, administrator snapshot, timestamp, action description, and relevant metadata. Audit history supports action/date filters, pagination, summary counts, and CSV export.
+## What I learned
 
-## Error contract
+Building CampusConnect helped me practise more than connecting a React page to an API. I worked through authentication, role boundaries, validation, configuration recovery, audit reporting, automated testing, CI, deployment, and environment management as one complete system.
 
-API failures use a consistent structure:
-
-```json
-{
-  "error": {
-    "code": "VALIDATION_ERROR",
-    "message": "Request validation failed",
-    "details": [
-      {
-        "field": "title",
-        "message": "title is required"
-      }
-    ]
-  }
-}
-```
-
-## Engineering decisions
-
-- **Workspace monorepo:** keeps client and server development synchronized.
-- **Layered backend:** separates transport, validation, business logic, and persistence.
-- **Server-side discovery:** keeps filtering and pagination scalable beyond browser memory.
-- **RBAC at the API layer:** prevents client-side route protection from becoming the only security boundary.
-- **Immutable history:** supports traceability and recovery without destroying earlier records.
-- **Environment separation:** prevents secrets and deployment-specific values from entering source control.
-- **Tested failure paths:** validates unauthorized access, invalid queries, missing records, and disabled submissions.
-
-## Roadmap
-
-- GitHub Actions continuous integration
-- Production deployment and smoke testing
-- Final screenshots and live demonstration documentation
+The most useful lesson was that operational features matter as much as the main user flow. Configuration history, health checks, error handling, audit records, and deployment checks make an application easier to operate and troubleshoot.
 
 ## Author
 
 **Anjali Singh**  
-B.Tech Computer Science and Engineering, 2026
-
-- [GitHub](https://github.com/Anjalisingh127)
-- [LinkedIn](https://www.linkedin.com/in/anjalisingh-as12)
-
----
-
-This repository is developed as a practical full-stack software-engineering project. Features and metrics are documented only after implementation and verification.
+B.Tech Computer Science and Engineering, Sharda University  
+[GitHub](https://github.com/Anjalisingh127) · [LinkedIn](https://www.linkedin.com/in/anjalisingh-as12)
